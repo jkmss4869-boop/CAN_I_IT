@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guess The Noun - ESL Duo Game</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- 1. MAIN MENU SCREEN -->
+        <section id="main-menu" class="screen active">
+            <div class="menu-card">
+                <div class="badge-top">ESL DEDUCTION GAME • GRADE 7</div>
+                <h1 class="game-title">GUESS THE NOUN</h1>
+                <p class="game-subtitle">2-Player Online Speaking Game</p>
+
+                <div class="rules-box">
+                    <h3>💡 Cách chơi nhanh:</h3>
+                    <ul>
+                        <li>Mỗi bên có <strong>3 từ bí mật</strong> và <strong>3 động từ</strong>.</li>
+                        <li>Lần lượt hỏi đối phương: <span class="highlight">"Can I [Verb] it?"</span></li>
+                        <li>Bên kia nhìn tranh bí mật của mình, chỉ trả lời <strong>YES</strong> hoặc <strong>NO</strong>.</li>
+                        <li>Dùng logic loại trừ để chốt đáp án đúng ở trình đơn thả xuống bên dưới!</li>
+                    </ul>
+                </div>
+
+                <div class="select-section">
+                    <p class="select-label">Chọn màn hình của bạn:</p>
+                    <div class="btn-grid">
+                        <button class="btn-select p1" onclick="initGame(1)">
+                            <span class="btn-icon">👩‍🏫</span>
+                            <span class="btn-text">
+                                <strong>PLAYER 1 SCREEN</strong>
+                                <small>Giáo viên (Vỹ)</small>
+                            </span>
+                        </button>
+                        <button class="btn-select p2" onclick="initGame(2)">
+                            <span class="btn-icon">🧑‍🎓</span>
+                            <span class="btn-text">
+                                <strong>PLAYER 2 SCREEN</strong>
+                                <small>Học sinh (Đạt / Trinh)</small>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. GAME PLAY SCREEN -->
+        <section id="game-screen" class="screen">
+            <header class="top-bar">
+                <button class="btn-home" onclick="goToMenu()">🏠 Main Menu</button>
+                <h2 id="screen-header">P1 SCREEN</h2>
+                <div class="player-badge" id="player-role-badge">Teacher</div>
+            </header>
+
+            <!-- MAIN GAME BOARD -->
+            <div class="board-container" id="board-layout">
+                <!-- Column A: Opponent Mystery Boxes -->
+                <div class="board-col side-col" id="col-mystery">
+                    <div class="col-title" id="mystery-header">P2 Mystery</div>
+                    <p class="col-desc">3 từ bí mật của đối phương:</p>
+                    <div class="mystery-list" id="mystery-boxes">
+                        <div class="m-box"><span>1</span> <div class="q-mark">❓</div> <small>Item 1</small></div>
+                        <div class="m-box"><span>2</span> <div class="q-mark">❓</div> <small>Item 2</small></div>
+                        <div class="m-box"><span>3</span> <div class="q-mark">❓</div> <small>Item 3</small></div>
+                    </div>
+                </div>
+
+                <!-- Column B: Noun Picture Carousel -->
+                <div class="board-col center-col" id="col-carousel">
+                    <div class="col-title">🖼️ Noun Picture (Tranh của bạn)</div>
+                    <p class="col-desc">Khi đối phương hỏi câu số mấy, hãy bấm xem tranh số đó:</p>
+                    
+                    <div class="carousel-card">
+                        <button class="nav-btn" onclick="changeCard(-1)">&#10094;</button>
+                        <div class="card-content">
+                            <span class="item-tag" id="card-tag">Item #1</span>
+                            <div class="emoji-art" id="card-emoji">🎂</div>
+                            <h3 class="noun-name" id="card-noun">A cake</h3>
+                            <div class="verb-hints" id="card-hints">
+                                <span>Can CUT? <strong>YES</strong></span>
+                                <span>Can MAKE? <strong>YES</strong></span>
+                            </div>
+                        </div>
+                        <button class="nav-btn" onclick="changeCard(1)">&#10095;</button>
+                    </div>
+
+                    <div class="dots-container" id="carousel-dots"></div>
+                </div>
+
+                <!-- Column C: My Verbs -->
+                <div class="board-col side-col" id="col-verbs">
+                    <div class="col-title" id="verbs-header">P1 Verbs</div>
+                    <p class="col-desc">Động từ đối phương sẽ hỏi bạn:</p>
+                    <div class="verb-list" id="verb-boxes"></div>
+                </div>
+            </div>
+
+            <!-- BOTTOM SECTION: ANSWERS DROPDOWNS -->
+            <div class="answers-panel">
+                <div class="ans-header">
+                    <h3>🎯 ANSWERS (Trình đơn thả xuống)</h3>
+                    <p>Hãy suy luận và chọn đúng cả 3 danh từ của đối phương:</p>
+                </div>
+                
+                <div class="dropdown-grid">
+                    <div class="drop-group">
+                        <label>Item #1</label>
+                        <select id="ans-1" class="custom-select"></select>
+                    </div>
+                    <div class="drop-group">
+                        <label>Item #2</label>
+                        <select id="ans-2" class="custom-select"></select>
+                    </div>
+                    <div class="drop-group">
+                        <label>Item #3</label>
+                        <select id="ans-3" class="custom-select"></select>
+                    </div>
+                </div>
+
+                <div class="submit-area">
+                    <button class="btn-submit" onclick="verifyAnswers()">🚀 CHỐT ĐÁP ÁN</button>
+                    <p id="error-msg" class="error-text"></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. VICTORY SCREEN -->
+        <section id="victory-screen" class="screen">
+            <div class="victory-card">
+                <div class="trophy-anim">🏆🎉👑</div>
+                <h1>EXCELLENT!</h1>
+                <h2>BẠN ĐÃ ĐOÁN CHÍNH XÁC!</h2>
+                <p id="win-subtitle">Chúc mừng bạn đã giải mã thành công 3 từ bí mật của đối phương.</p>
+                <div class="win-actions">
+                    <button class="btn-select p1" onclick="goToMenu()">🔄 Chơi ván mới</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
