@@ -7,9 +7,9 @@ const GAME_CONFIG = {
         myVerbsHeader: "P1 Verbs (Bên kia hỏi bạn)",
         opponentMysteryHeader: "P2 Mystery (Đoán bên kia)",
         secretNouns: [
-            { name: "A cake", icon: "🎂", cut: "YES", make: "YES", drink: "NO" },
-            { name: "Coffee", icon: "☕", cut: "NO", make: "YES", drink: "YES" },
-            { name: "A coconut", icon: "🥥", cut: "YES", make: "NO", drink: "YES" }
+            { name: "A cake", image: "images/easy_chocolate_cake_31070_16x9.jpg" },
+            { name: "Coffee", image: "images/easy_chocolate_cake_31070_16x9.jpg" },
+            { name: "A coconut", image: "images/easy_chocolate_cake_31070_16x9.jpg" }
         ],
         myVerbs: ["CUT", "MAKE", "DRINK"],
         opponentOptions: ["A paper plane", "A drone", "A sandwich"],
@@ -22,10 +22,11 @@ const GAME_CONFIG = {
         roleColor: "#2ec4b6",
         myVerbsHeader: "P2 Verbs (Bên kia hỏi bạn)",
         opponentMysteryHeader: "P1 Mystery (Đoán bên kia)",
+        // Cấu trúc mới trong GAME_CONFIG (thay thuộc tính icon bằng image)
         secretNouns: [
-            { name: "A paper plane", icon: "✈️", fly: "YES", make: "YES", buy: "NO" },
-            { name: "A drone", icon: "🛸", fly: "YES", make: "NO", buy: "YES" },
-            { name: "A sandwich", icon: "🥪", fly: "NO", make: "YES", buy: "YES" }
+            { name: "A paper plane", image: "images/easy_chocolate_cake_31070_16x9.jpg" },
+            { name: "A drone", image: "images/easy_chocolate_cake_31070_16x9.jpg" },
+            { name: "A sandwich", image: "images/easy_chocolate_cake_31070_16x9.jpg" }
         ],
         myVerbs: ["FLY", "MAKE", "BUY"],
         opponentOptions: ["A cake", "Coffee", "A coconut"],
@@ -36,6 +37,15 @@ const GAME_CONFIG = {
 
 let currentPlayer = 1;
 let currentCardIndex = 0;
+
+function renderVerbList(containerId, verbs) {
+    document.getElementById(containerId).innerHTML = verbs.map((v, i) => `
+        <div class="v-box verb-highlight">
+            <span>V${i + 1}</span>
+            <div><strong>${v}</strong></div>
+        </div>
+    `).join('');
+}
 
 // Chuyển màn hình
 function switchScreen(screenId) {
@@ -60,30 +70,24 @@ function initGame(playerNum) {
     roleBadge.style.backgroundColor = config.roleColor;
 
     // Thiết lập tính chất Ngược Cột (Mirrored Columns) theo phác thảo của bạn
-    const boardLayout = document.getElementById('board-layout');
-    const colMystery = document.getElementById('col-mystery');
-    const colVerbs = document.getElementById('col-verbs');
+    const otherPlayer = currentPlayer === 1 ? 2 : 1;
+    const otherConfig = GAME_CONFIG[otherPlayer];
 
     if (config.mirrored) {
         // P2 Screen: Cột trái là Verbs, Cột phải là Mystery
-        boardLayout.style.flexDirection = 'row-reverse';
+        document.getElementById('board-layout').style.flexDirection = 'row';
     } else {
         // P1 Screen: Cột trái là Mystery, Cột phải là Verbs
-        boardLayout.style.flexDirection = 'row';
+        document.getElementById('board-layout').style.flexDirection = 'row';
     }
 
     // Tiêu đề cột
-    document.getElementById('mystery-header').innerText = config.opponentMysteryHeader;
-    document.getElementById('verbs-header').innerText = config.myVerbsHeader;
+    document.getElementById('verbs-header1').innerText = `P${currentPlayer} Verbs (Ben kia hoi ban)`;
+    document.getElementById('verbs-header2').innerText = `P${otherPlayer} Verbs (Ban hoi ben kia)`;
 
     // Render danh sách Động từ
-    const verbContainer = document.getElementById('verb-boxes');
-    verbContainer.innerHTML = config.myVerbs.map((v, i) => `
-        <div class="v-box verb-highlight">
-            <span>V${i+1}</span>
-            <div>Can I <strong>${v}</strong> it?</div>
-        </div>
-    `).join('');
+    renderVerbList('verb-boxes-left', config.myVerbs);
+    renderVerbList('verb-boxes-right', otherConfig.myVerbs);
 
     // Populate Dropdown Answers
     [1, 2, 3].forEach(num => {
@@ -105,18 +109,8 @@ function renderCarousel() {
     const cardData = config.secretNouns[currentCardIndex];
 
     document.getElementById('card-tag').innerText = `Item #${currentCardIndex + 1}`;
-    document.getElementById('card-emoji').innerText = cardData.icon;
+    document.getElementById('card-img').src = cardData.image;
     document.getElementById('card-noun').innerText = cardData.name;
-
-    // Hints
-    const verbList = config.myVerbs;
-    const hintsHtml = verbList.map(v => {
-        const val = cardData[v.toLowerCase()] || "NO";
-        const color = val === "YES" ? "#2e7d32" : "#c62828";
-        return `span style="color:${color}">Can ${v}? <strong>${val}</strong></span>`;
-    }).join(' • ');
-
-    document.getElementById('card-hints').innerHTML = hintsHtml;
 
     // Dots
     const dotsContainer = document.getElementById('carousel-dots');
@@ -157,7 +151,7 @@ function verifyAnswers() {
     }
 
     if (isMatch) {
-        document.getElementById('win-subtitle').innerText = 
+        document.getElementById('win-subtitle').innerText =
             `Chúc mừng ${config.roleBadge} đã suy luận chính xác bộ từ: ${correct.join(', ')}!`;
         switchScreen('victory-screen');
     } else {

@@ -1,12 +1,16 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Guess The Noun - ESL Duo Game</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap"
+        rel="stylesheet">
 </head>
+
 <body>
     <div class="app-container">
         <!-- 1. MAIN MENU SCREEN -->
@@ -21,7 +25,9 @@
                     <ul>
                         <li>Mỗi bên có <strong>3 từ bí mật</strong> và <strong>3 động từ</strong>.</li>
                         <li>Lần lượt hỏi đối phương: <span class="highlight">"Can I [Verb] it?"</span></li>
-                        <li>Bên kia nhìn tranh bí mật của mình, chỉ trả lời <strong>YES</strong> hoặc <strong>NO</strong>.</li>
+                        <li>Bên kia nhìn tranh bí mật của mình, chỉ trả lời <strong>YES</strong> hoặc
+                            <strong>NO</strong>.
+                        </li>
                         <li>Dùng logic loại trừ để chốt đáp án đúng ở trình đơn thả xuống bên dưới!</li>
                     </ul>
                 </div>
@@ -58,44 +64,42 @@
 
             <!-- MAIN GAME BOARD -->
             <div class="board-container" id="board-layout">
-                <!-- Column A: Opponent Mystery Boxes -->
-                <div class="board-col side-col" id="col-mystery">
-                    <div class="col-title" id="mystery-header">P2 Mystery</div>
-                    <p class="col-desc">3 từ bí mật của đối phương:</p>
-                    <div class="mystery-list" id="mystery-boxes">
-                        <div class="m-box"><span>1</span> <div class="q-mark">❓</div> <small>Item 1</small></div>
-                        <div class="m-box"><span>2</span> <div class="q-mark">❓</div> <small>Item 2</small></div>
-                        <div class="m-box"><span>3</span> <div class="q-mark">❓</div> <small>Item 3</small></div>
-                    </div>
+                <!-- Column A: Current Player Verbs -->
+                <div class="board-col side-col" id="col-verbs-left">
+                    <div class="col-title" id="verbs-header1">P2 Verbs</div>
+                    <p class="col-desc">Động từ đối phương sẽ hỏi bạn:</p>
+                    <div class="verb-list" id="verb-boxes-left"></div>
                 </div>
 
                 <!-- Column B: Noun Picture Carousel -->
                 <div class="board-col center-col" id="col-carousel">
                     <div class="col-title">🖼️ Noun Picture (Tranh của bạn)</div>
                     <p class="col-desc">Khi đối phương hỏi câu số mấy, hãy bấm xem tranh số đó:</p>
-                    
+
                     <div class="carousel-card">
-                        <button class="nav-btn" onclick="changeCard(-1)">&#10094;</button>
+                        <button class="nav-btn" onclick="changeCard(-1)">❮</button>
+
                         <div class="card-content">
                             <span class="item-tag" id="card-tag">Item #1</span>
-                            <div class="emoji-art" id="card-emoji">🎂</div>
-                            <h3 class="noun-name" id="card-noun">A cake</h3>
-                            <div class="verb-hints" id="card-hints">
-                                <span>Can CUT? <strong>YES</strong></span>
-                                <span>Can MAKE? <strong>YES</strong></span>
+
+                            <div class="game-image-box">
+                                <img id="card-img" src="" alt="Game Illustration">
                             </div>
+
+                            <h3 class="noun-name" id="card-noun">A cake</h3>
                         </div>
-                        <button class="nav-btn" onclick="changeCard(1)">&#10095;</button>
+
+                        <button class="nav-btn" onclick="changeCard(1)">❯</button>
                     </div>
 
                     <div class="dots-container" id="carousel-dots"></div>
                 </div>
 
-                <!-- Column C: My Verbs -->
-                <div class="board-col side-col" id="col-verbs">
-                    <div class="col-title" id="verbs-header">P1 Verbs</div>
+                <!-- Column C: Other Player Verbs -->
+                <div class="board-col side-col" id="col-verbs-right">
+                    <div class="col-title" id="verbs-header2">P1 Verbs</div>
                     <p class="col-desc">Động từ đối phương sẽ hỏi bạn:</p>
-                    <div class="verb-list" id="verb-boxes"></div>
+                    <div class="verb-list" id="verb-boxes-right"></div>
                 </div>
             </div>
 
@@ -105,7 +109,7 @@
                     <h3>🎯 ANSWERS (Trình đơn thả xuống)</h3>
                     <p>Hãy suy luận và chọn đúng cả 3 danh từ của đối phương:</p>
                 </div>
-                
+
                 <div class="dropdown-grid">
                     <div class="drop-group">
                         <label>Item #1</label>
@@ -144,4 +148,5 @@
 
     <script src="script.js"></script>
 </body>
+
 </html>
