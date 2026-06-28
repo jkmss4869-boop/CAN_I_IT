@@ -89,8 +89,8 @@ function initGame(playerNum) {
     }
 
     // Tiêu đề cột
-    document.getElementById('verbs-header1').innerText = `P${currentPlayer} Verbs (Bên kia hỏi bạn)`;
-    document.getElementById('verbs-header2').innerText = `P${otherPlayer} Verbs (Bạn hỏi bên kia)`;
+    document.getElementById('verbs-header1').innerText = `P${currentPlayer} Verbs`;
+    document.getElementById('verbs-header2').innerText = `P${otherPlayer} Verbs`;
 
     // Render danh sách Động từ
     renderVerbList('verb-boxes-left', config.myVerbs);
