@@ -7,7 +7,7 @@
 
 
 body {
-    background-color: #f4f7f600;
+    background-color: #f4f7f6;
     color: #2c3e50;
     min-height: 100vh;
     display: flex;
@@ -601,4 +601,27 @@ body {
     object-fit: contain;  /* Thần chú giữ nguyên tỷ lệ gốc của ảnh, không bao giờ bị méo */
     border-radius: 12px;  /* Bo góc ảnh một chút cho dễ thương */
     box-shadow: 0 4px 10px rgba(0,0,0,0.05); /* Tạo đổ bóng nhẹ cho ảnh nổi lên */
+}
+.music-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999; /* Giúp nút luôn nổi lên trên cùng, không bị thẻ khác che mất */
+
+    padding: 8px 16px;
+    border: 2px solid var(--border);
+    border-radius: 20px;
+
+    background-color: var(--panel-bg);
+    color: var(--text);
+    box-shadow: var(--card-shadow);
+
+    font-family: inherit;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.1s ease;
+}
+
+.music-btn:active {
+    transform: scale(0.95); /* Hiệu ứng lún xuống nhẹ khi bấm */
 }

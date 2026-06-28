@@ -165,3 +165,19 @@ function verifyAnswers() {
         errEl.innerText = "❌ Sai rồi! Có từ chưa đúng vị trí. Hai bên hãy hỏi kỹ lại nhau nhé!";
     }
 }
+// ================= XỬ LÝ NHẠC NỀN =================
+const bgMusic = new Audio('music/music.mp3'); 
+bgMusic.loop = true;  // Tự động lặp lại bài hát khi hết
+bgMusic.volume = 0.5; // Đặt âm lượng 50% cho đỡ chói tai (từ 0.0 đến 1.0)
+
+const musicBtn = document.getElementById('musicBtn');
+
+musicBtn.addEventListener('click', () => {
+    if (bgMusic.paused) {
+        bgMusic.play();
+        musicBtn.textContent = '🔊 Tắt nhạc';
+    } else {
+        bgMusic.pause();
+        musicBtn.textContent = '🔇 Bật nhạc';
+    }
+});
