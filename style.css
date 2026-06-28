@@ -5,8 +5,9 @@
     font-family: 'Nunito', sans-serif;
 }
 
+
 body {
-    background-color: #f4f7f6;
+    background-color: #f4f7f600;
     color: #2c3e50;
     min-height: 100vh;
     display: flex;

@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Guess The Noun - ESL Duo Game</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="themes.css">
     <link
         href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap"
         rel="stylesheet">
@@ -13,6 +14,29 @@
 
 <body>
     <div class="app-container">
+        <div class="theme-switcher" aria-label="Theme styles">
+            <button class="theme-chip" type="button" data-theme-choice="classic" onclick="setTheme('classic')">
+                <span class="theme-dot theme-dot-classic"></span>
+                Classic
+            </button>
+            <button class="theme-chip" type="button" data-theme-choice="arcade" onclick="setTheme('arcade')">
+                <span class="theme-dot theme-dot-arcade"></span>
+                Arcade
+            </button>
+            <button class="theme-chip" type="button" data-theme-choice="candy" onclick="setTheme('candy')">
+                <span class="theme-dot theme-dot-candy"></span>
+                Candy
+            </button>
+            <button class="theme-chip" type="button" data-theme-choice="chalk" onclick="setTheme('chalk')">
+                <span class="theme-dot theme-dot-chalk"></span>
+                Chalk
+            </button>
+            <button class="theme-chip" type="button" data-theme-choice="sunset" onclick="setTheme('sunset')">
+                <span class="theme-dot theme-dot-sunset"></span>
+                Sunset
+            </button>
+        </div>
+
         <!-- 1. MAIN MENU SCREEN -->
         <section id="main-menu" class="screen active">
             <div class="menu-card">
@@ -36,17 +60,17 @@
                     <p class="select-label">Chọn màn hình của bạn:</p>
                     <div class="btn-grid">
                         <button class="btn-select p1" onclick="initGame(1)">
-                            <span class="btn-icon">👩‍🏫</span>
+                            <span class="btn-icon"></span>
                             <span class="btn-text">
                                 <strong>PLAYER 1 SCREEN</strong>
-                                <small>Giáo viên (Vỹ)</small>
+                                <small>PLAYER 1 </small>
                             </span>
                         </button>
                         <button class="btn-select p2" onclick="initGame(2)">
-                            <span class="btn-icon">🧑‍🎓</span>
+                            <span class="btn-icon"></span>
                             <span class="btn-text">
                                 <strong>PLAYER 2 SCREEN</strong>
-                                <small>Học sinh (Đạt / Trinh)</small>
+                                <small>PLAYER 2</small>
                             </span>
                         </button>
                     </div>
@@ -59,7 +83,7 @@
             <header class="top-bar">
                 <button class="btn-home" onclick="goToMenu()">🏠 Main Menu</button>
                 <h2 id="screen-header">P1 SCREEN</h2>
-                <div class="player-badge" id="player-role-badge">Teacher</div>
+                <div class="player-badge" id="player-role-badge">Player 1</div>
             </header>
 
             <!-- MAIN GAME BOARD -->
@@ -67,7 +91,7 @@
                 <!-- Column A: Current Player Verbs -->
                 <div class="board-col side-col" id="col-verbs-left">
                     <div class="col-title" id="verbs-header1">P2 Verbs</div>
-                    <p class="col-desc">Động từ đối phương sẽ hỏi bạn:</p>
+                    <p class="col-desc">Động từ bạn sẽ hỏi đối phương:</p>
                     <div class="verb-list" id="verb-boxes-left"></div>
                 </div>
 
@@ -106,7 +130,7 @@
             <!-- BOTTOM SECTION: ANSWERS DROPDOWNS -->
             <div class="answers-panel">
                 <div class="ans-header">
-                    <h3>🎯 ANSWERS (Trình đơn thả xuống)</h3>
+                    <h3>🎯 ANSWERS </h3>
                     <p>Hãy suy luận và chọn đúng cả 3 danh từ của đối phương:</p>
                 </div>
 

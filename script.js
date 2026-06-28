@@ -1,42 +1,45 @@
 // DATA CẤU TRÚC GAME CHO PLAYER 1 VÀ PLAYER 2
-const GAME_CONFIG = {
-    1: {
-        headerTitle: "PLAYER 1 SCREEN",
-        roleBadge: "Teacher (Vỹ)",
-        roleColor: "#4361ee",
-        myVerbsHeader: "P1 Verbs (Bên kia hỏi bạn)",
-        opponentMysteryHeader: "P2 Mystery (Đoán bên kia)",
-        secretNouns: [
-            { name: "A cake", image: "images/easy_chocolate_cake_31070_16x9.jpg" },
-            { name: "Coffee", image: "images/easy_chocolate_cake_31070_16x9.jpg" },
-            { name: "A coconut", image: "images/easy_chocolate_cake_31070_16x9.jpg" }
-        ],
-        myVerbs: ["CUT", "MAKE", "DRINK"],
-        opponentOptions: ["A paper plane", "A drone", "A sandwich"],
-        correctAnswer: ["A paper plane", "A drone", "A sandwich"],
-        mirrored: false // Cột trái: Mystery | Cột phải: Verbs
-    },
-    2: {
-        headerTitle: "PLAYER 2 SCREEN",
-        roleBadge: "Student",
-        roleColor: "#2ec4b6",
-        myVerbsHeader: "P2 Verbs (Bên kia hỏi bạn)",
-        opponentMysteryHeader: "P1 Mystery (Đoán bên kia)",
-        // Cấu trúc mới trong GAME_CONFIG (thay thuộc tính icon bằng image)
-        secretNouns: [
-            { name: "A paper plane", image: "images/easy_chocolate_cake_31070_16x9.jpg" },
-            { name: "A drone", image: "images/easy_chocolate_cake_31070_16x9.jpg" },
-            { name: "A sandwich", image: "images/easy_chocolate_cake_31070_16x9.jpg" }
-        ],
-        myVerbs: ["FLY", "MAKE", "BUY"],
-        opponentOptions: ["A cake", "Coffee", "A coconut"],
-        correctAnswer: ["A cake", "Coffee", "A coconut"],
-        mirrored: true // Đảo cột: Cột trái: Verbs | Cột phải: Mystery
-    }
-};
+const SHEET_API_URL = "https://script.google.com/macros/s/AKfycbzT6xj7tZ_wP6TT3b4TLCFSIvld9JhGl-QLPMfBGnah_WI4DUKN7ijoy-MeD4_1-B1TAg/exec";
+
+let GAME_CONFIG = {}; // <-- 1. Để rỗng hoàn toàn như thế này
+let isDataLoaded = false;
 
 let currentPlayer = 1;
 let currentCardIndex = 0;
+const THEME_STORAGE_KEY = "guess-noun-theme";
+
+function setTheme(themeName) {
+    document.body.dataset.theme = themeName;
+    localStorage.setItem(THEME_STORAGE_KEY, themeName);
+    document.querySelectorAll('[data-theme-choice]').forEach(button => {
+        button.classList.toggle('active', button.dataset.themeChoice === themeName);
+    });
+}
+
+function initTheme() {
+    setTheme(localStorage.getItem(THEME_STORAGE_KEY) || "classic");
+}
+
+initTheme();
+
+async function loadGameConfig() {
+    try {
+        // TỪ KHÓA 'await' NẰM TRONG HÀM ASYNC
+        const res = await fetch(SHEET_API_URL);
+        GAME_CONFIG = await res.json();
+        isDataLoaded = true;
+        console.log("Đã tải xong Config từ Google Sheet:", GAME_CONFIG);
+        
+        // Khi tải xong thì tự động chuyển sang màn hình Menu chính
+        switchScreen('main-menu'); 
+    } catch (err) {
+        alert("Lỗi tải dữ liệu từ Google Sheet!");
+        console.error(err);
+    }
+}
+
+// Gọi hàm này ngay lập tức khi vừa mở trang web để nó đi lấy dữ liệu từ Sheet luôn
+loadGameConfig();
 
 function renderVerbList(containerId, verbs) {
     document.getElementById(containerId).innerHTML = verbs.map((v, i) => `
@@ -59,6 +62,10 @@ function goToMenu() {
 
 // Khởi tạo game theo Player được chọn
 function initGame(playerNum) {
+    if (!isDataLoaded) {
+        alert("Dữ liệu game đang được tải từ Sheet, vui lòng đợi 2 giây...");
+        return;
+    }
     currentPlayer = playerNum;
     currentCardIndex = 0;
     const config = GAME_CONFIG[currentPlayer];
@@ -82,8 +89,8 @@ function initGame(playerNum) {
     }
 
     // Tiêu đề cột
-    document.getElementById('verbs-header1').innerText = `P${currentPlayer} Verbs (Ben kia hoi ban)`;
-    document.getElementById('verbs-header2').innerText = `P${otherPlayer} Verbs (Ban hoi ben kia)`;
+    document.getElementById('verbs-header1').innerText = `P${currentPlayer} Verbs (Bên kia hỏi bạn)`;
+    document.getElementById('verbs-header2').innerText = `P${otherPlayer} Verbs (Bạn hỏi bên kia)`;
 
     // Render danh sách Động từ
     renderVerbList('verb-boxes-left', config.myVerbs);
