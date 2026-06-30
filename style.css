@@ -356,6 +356,7 @@ body {
     font-size: 26px;
     color: #0f172a;
     margin-bottom: 12px;
+    white-space: pre-wrap; /* Hỗ trợ xuống dòng cho đoạn hội thoại */
 }
 
 .verb-hints {
@@ -438,7 +439,7 @@ body {
     font-size: 15px;
     font-weight: 700;
     outline: none;
-    cursor: pointer;
+    cursor: text;
 }
 
 .custom-select:focus {

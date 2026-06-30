@@ -96,11 +96,16 @@ function initGame(playerNum) {
     renderVerbList('verb-boxes-left', config.myVerbs);
     renderVerbList('verb-boxes-right', otherConfig.myVerbs);
 
-    // Populate Dropdown Answers
+    // Populate Suggestions Datalist
+    const datalistEl = document.getElementById('noun-suggestions');
+    if (datalistEl) {
+        datalistEl.innerHTML = config.opponentOptions.map(opt => `<option value="${opt}"></option>`).join('');
+    }
+
+    // Clear Input Answers
     [1, 2, 3].forEach(num => {
-        const selectEl = document.getElementById(`ans-${num}`);
-        selectEl.innerHTML = `<option value="">-- Đoán Item ${num} --</option>` +
-            config.opponentOptions.map(opt => `<option value="${opt}">${opt}</option>`).join('');
+        const inputEl = document.getElementById(`ans-${num}`);
+        if (inputEl) inputEl.value = '';
     });
 
     document.getElementById('error-msg').innerText = '';
@@ -110,6 +115,34 @@ function initGame(playerNum) {
     switchScreen('game-screen');
 }
 
+// Hàm format nội dung hội thoại: hỗ trợ xuống dòng, emoji và thay thế tag [icon:file_anh] thành ảnh thật
+function formatDialogue(text) {
+    if (!text) return "";
+    // Tránh lỗi bảo mật XSS bằng cách mã hóa các ký tự HTML cơ bản
+    let safeText = text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+    // Thay thế ký tự xuống dòng thành thẻ <br>
+    safeText = safeText.replace(/\n/g, "<br>");
+
+    // Thay thế [icon:ten_anh] thành thẻ <img class="inline-icon">
+    // Ví dụ: [icon:cake.jpg] hoặc [icon:coffee.png]
+    safeText = safeText.replace(/\[icon:([^\]]+)\]/g, (match, iconName) => {
+        let src = iconName.trim();
+        // Nếu không có tiền tố thư mục/đường dẫn web, tự động trỏ vào images/
+        if (!src.startsWith('images/') && !src.startsWith('http')) {
+            src = 'images/' + src;
+        }
+        return `<img src="${src}" class="inline-icon" alt="${iconName}" style="width: 28px; height: 28px; vertical-align: middle; margin: 0 4px; object-fit: contain;">`;
+    });
+
+    return safeText;
+}
+
 // Cập nhật hiển thị Tranh (Carousel)
 function renderCarousel() {
     const config = GAME_CONFIG[currentPlayer];
@@ -117,7 +150,7 @@ function renderCarousel() {
 
     document.getElementById('card-tag').innerText = `Item #${currentCardIndex + 1}`;
     document.getElementById('card-img').src = cardData.image;
-    document.getElementById('card-noun').innerText = cardData.name;
+    document.getElementById('card-noun').innerHTML = formatDialogue(cardData.name);
 
     // Dots
     const dotsContainer = document.getElementById('carousel-dots');
@@ -142,16 +175,18 @@ function verifyAnswers() {
     const errEl = document.getElementById('error-msg');
 
     if (!guess1 || !guess2 || !guess3) {
-        errEl.innerText = "⚠️ Bạn vui lòng chọn đầy đủ đáp án cho cả 3 từ nhé!";
+        errEl.innerText = "⚠️ Bạn vui lòng nhập đầy đủ đáp án cho cả 3 từ nhé!";
         return;
     }
 
     const guesses = [guess1, guess2, guess3];
     const correct = config.correctAnswer;
 
+    const cleanString = (str) => (str || "").trim().toLowerCase();
+
     let isMatch = true;
     for (let i = 0; i < 3; i++) {
-        if (guesses[i] !== correct[i]) {
+        if (cleanString(guesses[i]) !== cleanString(correct[i])) {
             isMatch = false;
             break;
         }

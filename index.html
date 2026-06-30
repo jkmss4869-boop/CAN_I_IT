@@ -138,17 +138,18 @@
                 <div class="dropdown-grid">
                     <div class="drop-group">
                         <label>Item #1</label>
-                        <select id="ans-1" class="custom-select"></select>
+                        <input type="text" id="ans-1" class="custom-select" placeholder="Nhập đáp án 1..." list="noun-suggestions" autocomplete="off">
                     </div>
                     <div class="drop-group">
                         <label>Item #2</label>
-                        <select id="ans-2" class="custom-select"></select>
+                        <input type="text" id="ans-2" class="custom-select" placeholder="Nhập đáp án 2..." list="noun-suggestions" autocomplete="off">
                     </div>
                     <div class="drop-group">
                         <label>Item #3</label>
-                        <select id="ans-3" class="custom-select"></select>
+                        <input type="text" id="ans-3" class="custom-select" placeholder="Nhập đáp án 3..." list="noun-suggestions" autocomplete="off">
                     </div>
                 </div>
+                <datalist id="noun-suggestions"></datalist>
 
                 <div class="submit-area">
                     <button class="btn-submit" onclick="verifyAnswers()">🚀 CHỐT ĐÁP ÁN</button>
