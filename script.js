@@ -115,42 +115,18 @@ function initGame(playerNum) {
     switchScreen('game-screen');
 }
 
-// Hàm format nội dung hội thoại: hỗ trợ xuống dòng, emoji và thay thế tag [icon:file_anh] thành ảnh thật
-function formatDialogue(text) {
-    if (!text) return "";
-    // Tránh lỗi bảo mật XSS bằng cách mã hóa các ký tự HTML cơ bản
-    let safeText = text
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-
-    // Thay thế ký tự xuống dòng thành thẻ <br>
-    safeText = safeText.replace(/\n/g, "<br>");
-
-    // Thay thế [icon:ten_anh] thành thẻ <img class="inline-icon">
-    // Ví dụ: [icon:cake.jpg] hoặc [icon:coffee.png]
-    safeText = safeText.replace(/\[icon:([^\]]+)\]/g, (match, iconName) => {
-        let src = iconName.trim();
-        // Nếu không có tiền tố thư mục/đường dẫn web, tự động trỏ vào images/
-        if (!src.startsWith('images/') && !src.startsWith('http')) {
-            src = 'images/' + src;
-        }
-        return `<img src="${src}" class="inline-icon" alt="${iconName}" style="width: 28px; height: 28px; vertical-align: middle; margin: 0 4px; object-fit: contain;">`;
-    });
-
-    return safeText;
-}
-
 // Cập nhật hiển thị Tranh (Carousel)
 function renderCarousel() {
     const config = GAME_CONFIG[currentPlayer];
     const cardData = config.secretNouns[currentCardIndex];
 
     document.getElementById('card-tag').innerText = `Item #${currentCardIndex + 1}`;
-    document.getElementById('card-img').src = cardData.image;
-    document.getElementById('card-noun').innerHTML = formatDialogue(cardData.name);
+    
+    // Đảm bảo đường dẫn ảnh dùng dấu gạch chéo xuôi '/' thay vì gạch chéo ngược '\' để tương thích tốt với trình duyệt
+    const imgPath = cardData.image ? cardData.image.replace(/\\/g, '/') : '';
+    document.getElementById('card-img').src = imgPath;
+    
+    document.getElementById('card-noun').innerText = cardData.name;
 
     // Dots
     const dotsContainer = document.getElementById('carousel-dots');
